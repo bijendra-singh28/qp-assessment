@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Groceries</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f7;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #0056b3;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+        }
+        table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        table tr:hover {
+            background-color: #f1f5fc;
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .btn-custom {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-custom:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Available Groceries</h1>
+    </div>
+    
+    <div class="message" th:if="${message}" th:text="${message}"></div>
+    <div class="container">
+        <form th:action="@{/book}" method="post">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Price/Unit</th>
+                        <th>Quantity in Stock</th>
+                        <th>Enter Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="grocery : ${groceries}">
+                        <td>
+                            <input type="checkbox" name="groceryIds" th:value="${grocery.id}" onclick="toggleRowButton(this)">
+                        </td>
+                        <td th:text="${grocery.name}"></td>
+                        <td th:text="${grocery.category}"></td>
+                        <td th:text="${grocery.pricePerUnit}"></td>
+                        <td th:text="${grocery.quantityInStock}"></td>
+                        <td>
+                            <input type="number" name="quantities" placeholder="Enter quantity" oninput="toggleRowButton(this)">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" id="bookButton" class="button" disabled>Book Selected Items</button>
+            <a href="/user/dashboard" class="btn-custom">Back to Dashboard</a>
+        </form>
+    </div>
+
+    <script>
+    function toggleRowButton(element) {
+        const rows = document.querySelectorAll('tbody tr');
+        const bookButton = document.getElementById('bookButton');
+        let isFormValid = false;
+
+        rows.forEach(row => {
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            const quantity = row.querySelector('input[type="number"]');
+
+            if (checkbox.checked) {
+                if (quantity.value && parseInt(quantity.value) > 0) {
+                    isFormValid = true;
+                } else {
+                    isFormValid = false; // Disable if any selected row has an invalid quantity
+                    return; // Break loop
+                }
+            }
+        });
+
+        bookButton.disabled = !isFormValid;
+    }
+    </script>
+</body>
+</html>

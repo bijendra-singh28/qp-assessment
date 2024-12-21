@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+            color: #333;
+        }
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+        }
+        .container h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .container p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: #666;
+        }
+        .option {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            margin: 15px 10px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .option:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .option:active {
+            background-color: #004085;
+            transform: translateY(2px);
+        }
+        .option:focus {
+            outline: none;
+        }
+         .message {
+            color: green;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>User Dashboard</h1>
+    </div>
+    <div class="container">
+        <h2>Welcome, User!</h2>
+        <p>Choose an option below to manage your grocery shopping:</p>
+        <div th:each="option : ${options}">
+           <a th:href="'/' + ${option.replace(' ', '-').toLowerCase()}" 
+               class="option" 
+               th:text="${option}">
+            </a>
+        </div>
+        <a th:href="@{/logout}" class="logout-btn">Logout</a>
+    </div>
+    
+    <script th:if="${message_booked}">
+        alert('Selected groceries have been booked.');
+    </script>
+</body>
+</html>
